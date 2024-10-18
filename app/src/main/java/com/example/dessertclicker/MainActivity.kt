@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .statusBarsPadding(),
                 ) {
+                    //call to dessert screen composble
                     DessertClickerApp(desserts = Datasource.dessertList)
                 }
             }
@@ -179,6 +180,7 @@ private fun DessertClickerApp(
     desserts: List<Dessert>
 ) {
 
+    //delete reference and change to dessertUiState.___
     var revenue by rememberSaveable { mutableStateOf(0) }
     var dessertsSold by rememberSaveable { mutableStateOf(0) }
 
