@@ -76,48 +76,7 @@ fun DessertScreen(
         //    mutableStateOf(desserts[dessertUiState.currentDessertIndex].imageId)
         //}
 
-        Scaffold(
-            topBar = {
-                val intentContext = LocalContext.current
-                val layoutDirection = LocalLayoutDirection.current
-                DessertClickerAppBar(
-                    onShareButtonClicked = {
-                        DessertViewModel().shareSoldDessertsInformation(
-                            intentContext = intentContext,
-                            dessertsSold = dessertUiState.dessertsSold,
-                            revenue = dessertUiState.revenue
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = WindowInsets.safeDrawing.asPaddingValues()
-                                .calculateStartPadding(layoutDirection),
-                            end = WindowInsets.safeDrawing.asPaddingValues()
-                                .calculateEndPadding(layoutDirection),
-                        )
-                        .background(MaterialTheme.colorScheme.primary)
-                )
-            }
-        ) { contentPadding ->
-            DessertClickerScreen(
-                revenue = dessertUiState.revenue,
-                dessertsSold = dessertUiState.dessertsSold,
-                dessertImageId = dessertUiState.currentDessertImageId,
-                onDessertClicked = {
 
-                    // Update the revenue
-                    revenue += dessertUiState.currentDessertPrice
-                    dessertsSold++
-
-                    // Show the next dessert
-                    val dessertToShow = DessertViewModel().determineDessertToShow(desserts, dessertsSold)
-                    currentDessertImageId = dessertToShow.imageId
-                    currentDessertPrice = dessertToShow.price
-                },
-                modifier = Modifier.padding(contentPadding)
-            )
-        }
     }
     @Composable
     fun DessertClickerAppBar(
@@ -244,3 +203,57 @@ fun DessertScreen(
             )
         }
     }
+@Composable
+fun DessertLayout(
+    desserts: List<Dessert>,
+    dessertUiState: DessertUiState,
+    revenue: Int,
+    dessertsSold: Int,
+    currentDessertImageId: Int,
+    currentDessertPrice: Int,
+    onDessertClicked: () -> Unit
+
+){
+    Scaffold(
+        topBar = {
+            val intentContext = LocalContext.current
+            val layoutDirection = LocalLayoutDirection.current
+            DessertClickerAppBar(
+                onShareButtonClicked = {
+                    DessertViewModel().shareSoldDessertsInformation(
+                        intentContext = intentContext,
+                        dessertsSold = dessertUiState.dessertsSold,
+                        revenue = dessertUiState.revenue
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = WindowInsets.safeDrawing.asPaddingValues()
+                            .calculateStartPadding(layoutDirection),
+                        end = WindowInsets.safeDrawing.asPaddingValues()
+                            .calculateEndPadding(layoutDirection),
+                    )
+                    .background(MaterialTheme.colorScheme.primary)
+            )
+        }
+    ) { contentPadding ->
+        DessertClickerScreen(
+            revenue = dessertUiState.revenue,
+            dessertsSold = dessertUiState.dessertsSold,
+            dessertImageId = dessertUiState.currentDessertImageId,
+            onDessertClicked = {
+
+                // Update the revenue
+                revenue += dessertUiState.currentDessertPrice
+                dessertsSold++
+
+                // Show the next dessert
+                val dessertToShow = DessertViewModel().determineDessertToShow(desserts, dessertsSold)
+                currentDessertImageId = dessertToShow.imageId
+                currentDessertPrice = dessertToShow.price
+            },
+            modifier = Modifier.padding(contentPadding)
+        )
+    }
+}
